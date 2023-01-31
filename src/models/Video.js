@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+
+//mongoose helps to validate the data
 const videoSchema = new mongoose.Schema({
     title: String,
     description: String,

@@ -1,13 +1,9 @@
 import Video from "../models/Video";
 
-Video.find({},(error,videos)=>{});
-
 export const home = async(req,res)=> {
-  Video.find({},(error,videos)=>{
-    //await waits for the database
-    //const videos = await Video.find({});
+    const videos = await Video.find({});
+    console.log(videos);
     return res.render("home",{pageTitle : "Home", videos});
-  });
 };
 export const watch = (req, res) => {
   const { id } = req.params;
@@ -27,7 +23,20 @@ export const getUpload = (req, res) => {
   return res.render("upload", { pageTitle: "Upload Video" });
 };
 
-export const postUpload = (req, res) => {
-  const { title } = req.body;
+export const postUpload = async (req, res) => {
+  const { title, description, hashtags} = req.body;
+  await Video.create({
+    title,
+    description,
+    createdAt: Date.now(),
+    hashtags:hashtags.split(",").map((word) => `#${word}`),
+    meta:{
+        views:0,
+        rating:0,
+    },
+  });
+  //save() returns a promise -> it means it just wait for the work 'save'
+  //await video.save();
+  //it takes some times to save data to database, so it has to wait
   return res.redirect("/");
 };
