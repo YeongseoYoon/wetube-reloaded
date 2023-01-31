@@ -1,6 +1,11 @@
 import express from "express";
-import {see, edit, upload, deleteVideo} from "../controllers/videoController"
-
+import {
+    watch,
+    getUpload,
+    getEdit,
+    postEdit,
+    postUpload,
+  } from "../controllers/videoController";
 const videoRouter = express.Router();
 
 //It's very important to keep the sequence
@@ -8,9 +13,10 @@ const videoRouter = express.Router();
 //cuz if some of users request for http://localhost:4000/videos/upload,
 //the router can be confused between real-upload and :id-upload
 //But if you use with regular expression, that kinda problems will be nothing
-videoRouter.get("/upload", upload);
-videoRouter.get("/:id(\\d+)", see);
-videoRouter.get("/:id(\\d+)/edit", edit);
-videoRouter.get("/:id(\\d+)/delete", deleteVideo);
+videoRouter.get("/:id(\\d+)", watch);
+videoRouter.get("/:id(\\d+)/edit", getEdit);
+videoRouter.post("/:id(\\d+)/edit", postEdit);
+videoRouter.route("/:id(\\d+)/edit").get(getEdit).post(postEdit);
+videoRouter.route("/upload").get(getUpload).post(postUpload);
 
 export default videoRouter;
