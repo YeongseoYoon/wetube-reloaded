@@ -31,8 +31,9 @@ export const postEdit = async(req, res) => {
     return res.render("404", { pageTitle: "Video Not Found"});
   }
   await Video.findByIdAndUpdate(id, {
-    title, description, hashtags:hashtags.split(",")
-    .map((word) => (word.startsWith('#') ? word :`#${word}`)),
+    title, 
+    description, 
+    hashtags:Video.formatHashtags(hashtags),
   })
   return res.redirect(`/videos/${id}`);
 };
@@ -47,7 +48,7 @@ export const postUpload = async (req, res) => {
     await Video.create({
       title,
       description,
-      hashtags:hashtags.split(",").map((word) => `#${word}`),
+      hashtags: Video.formatHashtags(hashtags),
     });
     //save() returns a promise -> it means it just wait for the work 'save'
     //await video.save();
@@ -61,3 +62,9 @@ export const postUpload = async (req, res) => {
   }
 
 };
+
+export const deleteVideo = async(req, res) =>{
+  const {id} = req.params;
+  await Video.findByIdAndDelete(id);
+  return res.redirect("/");
+}
