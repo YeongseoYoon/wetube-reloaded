@@ -19,7 +19,7 @@ export const getEdit = async(req, res) => {
   const { id } = req.params;
   const video = await Video.findById(id);
   if(!video){
-    return res.render("404", { pageTitle: "Video Not Found"});
+    return res.status(404).render("404", { pageTitle: "Video Not Found"});
   }
   return res.render("edit", { pageTitle: `Edit ${video.title}`,video});
 };
@@ -30,7 +30,7 @@ export const postEdit = async(req, res) => {
   //So you can puts argument into exists() to make a conditional sentence
   const video = await Video.exists({_id:id});
   if(!video){
-    return res.render("404", { pageTitle: "Video Not Found"});
+    return res.status(404).render("404", { pageTitle: "Video Not Found"});
   }
   await Video.findByIdAndUpdate(id, {
     title, 
@@ -57,7 +57,7 @@ export const postUpload = async (req, res) => {
     //it takes some times to save data to database, so it has to wait
     return res.redirect("/");
   }catch(error){
-    return res.render("upload", { 
+    return res.status(400).render("upload", { 
       pageTitle: "Upload Video",
       errorMessage: error._message,
    });
