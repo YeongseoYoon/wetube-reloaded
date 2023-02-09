@@ -2,19 +2,21 @@ import User from "../models/User";
 import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 
+const HTTP_BAD_REQUEST = 400;
+
 export const getJoin = (req, res)=>res.render("join",{pageTitle:"Join"});
 export const postJoin = async(req, res)=>{
     const {name, username, email, password, password2, location} = req.body;
     const pageTitle = "Join";
     if(password !== password2){
-        return res.status(400).render("join",{pageTitle, 
+        return res.status(HTTP_BAD_REQUEST).render("join",{pageTitle, 
             errorMessage: "Password confirmation does not match.",
             });
     }
 
     const exists = await User.exists({$or:[{username},{email}]});
     if(exists){
-        return res.status(400).render("join",{pageTitle, 
+        return res.status(HTTP_BAD_REQUEST).render("join",{pageTitle, 
         errorMessage: "This username/email is already taken.",
         });
     }
@@ -28,7 +30,7 @@ export const postJoin = async(req, res)=>{
         })
         return res.redirect("/login");
     }catch(error){
-        return res.status(400).render("join", { 
+        return res.status(HTTP_BAD_REQUEST).render("join", { 
           pageTitle,
           errorMessage: error._message,
        });
@@ -41,13 +43,13 @@ export const postLogin = async(req, res)=>{
     const pageTitle = "Login"
     const user = await User.findOne({username, socialOnly:false});
     if(!user){
-        return res.status(400).render("login",{pageTitle, 
+        return res.status(HTTP_BAD_REQUEST).render("login",{pageTitle, 
             errorMessage: "An account with this username does not exists.",
         });
     }
     const ok = await bcrypt.compare(password,user.password);
     if(!ok){
-        return res.status(400).render("login",{pageTitle, 
+        return res.status(HTTP_BAD_REQUEST).render("login",{pageTitle, 
             errorMessage: "Wrong password.",
         });
     }
@@ -94,7 +96,6 @@ export const finishGithubLogin = async(req, res) =>{
                 },
             })
         ).json();
-        console.log (userData);
         const emailData = await(
             await fetch(`${apiUrl}/user/emails`,{
                 headers:{
@@ -131,8 +132,43 @@ export const finishGithubLogin = async(req, res) =>{
 export const getEdit = (req, res)=>{
     return res.render("edit-profile",{pageTitle: "Edit Profile"});
 };
-export const postEdit = (req, res)=>{
-    return res.render("edit-profile");
+
+export const postEdit = async (req, res) => {
+    console.dir(req.session);
+    const {
+        session: {
+            user: { _id, email: sessionEmail, username: sessionUsername },
+        },
+        body: { name, email, username, location },
+    } = req;
+    let searchParam = [];
+    if (sessionEmail !== email) {
+        searchParam.push({ email });
+    }
+    if (sessionUsername !== username) {
+        searchParam.push({ username });
+    }
+    if (searchParam.length > 0) {
+        const foundUser = await User.findOne({ $or:searchParam });
+        if (foundUser && foundUser._id.toString() !== _id) {
+            return res.status(HTTP_BAD_REQUEST).render("edit-profile", {
+                pageTitle: "Edit Profile",
+                errorMessage: "This username/email is already taken.",
+            });
+        }
+    }
+    const updatedUser = await User.findByIdAndUpdate(
+        _id, 
+        {
+            name,
+            email,
+            username,
+            location,
+        },
+        {new:true}
+    );
+    req.session.user = updatedUser;
+return res.redirect("/users/edit");
 };
 export const logout = (req, res)=>{
     req.session.destroy();
