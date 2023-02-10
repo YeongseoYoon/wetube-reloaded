@@ -1,4 +1,5 @@
 import User from "../models/User";
+import Video from "../models/Video";
 import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 
@@ -216,9 +217,10 @@ export const logout = (req, res)=>{
 };
 export const see = async(req, res)=>{
     const {id} = req.params;
-    const user = await User.findById(id);
+    const user = await User.findById(id).populate("videos");
+    console.log(user);
     if(!user){
         return res.status(HTTP_NOT_FOUND).render("404", {pageTitle: "User Not Found"});
     }
-    return res.render("users/profile", {pageTitle: user.name, user})
+    return res.render("users/profile", {pageTitle: user.name, user,})
 };
