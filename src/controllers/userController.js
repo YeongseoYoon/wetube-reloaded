@@ -3,6 +3,7 @@ import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 
 const HTTP_BAD_REQUEST = 400;
+const HTTP_NOT_FOUND = 404;
 
 export const getJoin = (req, res)=>res.render("join",{pageTitle:"Join"});
 export const postJoin = async(req, res)=>{
@@ -134,13 +135,14 @@ export const getEdit = (req, res)=>{
 };
 
 export const postEdit = async (req, res) => {
-    console.dir(req.session);
     const {
         session: {
-            user: { _id, email: sessionEmail, username: sessionUsername },
+            user: { _id, avatarUrl, email: sessionEmail, username: sessionUsername },
         },
         body: { name, email, username, location },
+        file
     } = req;
+
     let searchParam = [];
     if (sessionEmail !== email) {
         searchParam.push({ email });
@@ -160,6 +162,7 @@ export const postEdit = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
         _id, 
         {
+            avatarUrl: file ? file.path : avatarUrl,
             name,
             email,
             username,
@@ -211,4 +214,11 @@ export const logout = (req, res)=>{
     req.session.destroy();
     return res.redirect("/");
 };
-export const see = (req, res)=>res.send("See User");
+export const see = async(req, res)=>{
+    const {id} = req.params;
+    const user = await User.findById(id);
+    if(!user){
+        return res.status(HTTP_NOT_FOUND).render("404", {pageTitle: "User Not Found"});
+    }
+    return res.render("users/profile", {pageTitle: user.name, user})
+};
