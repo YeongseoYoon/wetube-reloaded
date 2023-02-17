@@ -6,9 +6,9 @@ const HTTP_NOT_FOUND = 404;
 const HTTP_FORBIDDEN = 403;
 
 export const home = async(req,res)=> {
-    const videos = await Video.find({}).sort({
-      createdAt:"desc"
-    });
+  const videos = await Video.find({})
+  .sort({ createdAt: "desc" })
+  .populate("owner");
     return res.render("home",{pageTitle : "Home", videos});
 };
 export const watch = async(req, res) => {
@@ -110,7 +110,7 @@ export const search = async(req, res) =>{
       title:{
         $regex: new RegExp(keyword,"i")
       },
-    });
+    }).populate("owner");
   }
   return res.render("search",{pageTitle : "Search",videos});
 }
