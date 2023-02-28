@@ -122,11 +122,18 @@ const handleFullscreen = () => {
         }
     });
 
+    const handleEnded= () =>{
+        const {id} = videoContainer.dataset;
+        fetch(`/api/video/${id}/view`,{
+            method:"POST",
+        });
+    };
 playBtn.addEventListener("click",handlePlayClick);
 muteBtn.addEventListener("click",handleMute);
 volumeRange.addEventListener("input",handleVolumeChange);
 video.addEventListener("loadeddata", handleLoadedMetadata);
 video.addEventListener("timeupdate", handleTimeUpdate);
+video.addEventListener("ended",handleEnded);
 video.addEventListener("click", handlePlayClick);
 videoContainer.addEventListener("mousemove", handleMouseMove);
 videoContainer.addEventListener("mouseleave", handleMouseLeave);
