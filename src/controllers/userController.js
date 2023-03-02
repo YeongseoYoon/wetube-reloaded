@@ -218,17 +218,20 @@ export const logout = (req, res)=>{
     req.flash("info", "Bye Bye");
     return res.redirect("/");
 };
-export const see = async(req, res)=>{
-    const {id} = req.params;
+export const see = async (req, res) => {
+    const { id } = req.params;
     const user = await User.findById(id).populate({
-        path: "videos",
-        populate: {
-          path: "owner",
-          model: "User",
-        },
-      });
-    if(!user){
-        return res.status(HTTP_NOT_FOUND).render("404", {pageTitle: "User Not Found"});
+      path: "videos",
+      populate: {
+        path: "owner",
+        model: "User",
+      },
+    });
+    if (!user) {
+      return res.status(HTTP_NOT_FOUND).render("404", { pageTitle: "User not found." });
     }
-    return res.render("users/profile", {pageTitle: user.name, user,})
-};
+    return res.render("users/profile", {
+      pageTitle: user.name,
+      user,
+    });
+  };

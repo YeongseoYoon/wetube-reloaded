@@ -39,7 +39,7 @@ export const postEdit = async(req, res) => {
   const {title, description, hashtags} = req.body;
   //exists() takes only a 'filter'. And also it just return a boolean type of value
   //So you can puts argument into exists() to make a conditional sentence
-  const video = await Video.exists({_id:id});
+  const video = await Video.findById(_id);
   if(!video){
     return res.status(HTTP_NOT_FOUND).render("404", { pageTitle: "Video Not Found"});
   }
