@@ -13,11 +13,11 @@ const handleDownload = () =>{
   a.click();
   console.log("한번");
 
-  const tracks = stream.getTracks();
-  tracks.forEach((track) => {
-    track.stop();
-  });
-  stream = null;
+  // const tracks = stream.getTracks();
+  // tracks.forEach((track) => {
+  //   track.stop();
+  // });
+  // stream = null;
 };
 
 const handleStop = () =>{
@@ -31,7 +31,7 @@ const handleStart = () => {
   startBtn.removeEventListener("click", handleStart);
   startBtn.addEventListener("click", handleStop);
 
-  recorder = recorder = new window.MediaRecorder(stream);
+  recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
   recorder.ondataavailable = (event) => {
     videoFile = URL.createObjectURL(event.data);
     video.srcObject = null;
