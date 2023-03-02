@@ -176,11 +176,12 @@ return res.redirect("/users/edit");
 
 export const getChangePassword = (req, res) => {
     if (req.session.user.socialOnly === true) {
-      return res.redirect("/");
+        req.flash("error", "Can't change password.");
+        return res.redirect("/");
     }
     return res.render("users/change-password", { pageTitle: "Change Password" });
-  };
-  export const postChangePassword = async (req, res) => {
+};
+export const postChangePassword = async (req, res) => {
     const {
         session: {
             user: { _id},
@@ -206,12 +207,15 @@ export const getChangePassword = (req, res) => {
     user.password = newPassword;
     //to hash a new password
     await user.save();
-    req.session.destroy();
-    return res.redirect("/login");
-  };
+    req.flash("info", "Password updated");
+    return res.redirect("/users/logout");
+};
 
 export const logout = (req, res)=>{
-    req.session.destroy();
+    req.session.user = null;
+    res.locals.loggedInUser = req.session.user;
+    req.session.loggedIn = false;
+    req.flash("info", "Bye Bye");
     return res.redirect("/");
 };
 export const see = async(req, res)=>{
