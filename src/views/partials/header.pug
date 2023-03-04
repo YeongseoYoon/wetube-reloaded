@@ -18,9 +18,9 @@ header
                         if !loggedInUser.avatarUrl 
                             span 😀
                         else if loggedInUser.avatarUrl.includes("githubusercontent")
-                            img.header__avatar(src=loggedInUser.avatarUrl)
+                            img.header__avatar(src=loggedInUser.avatarUrl,crossorigin)
                         else
-                            img.header__avatar(src="/"+loggedInUser.avatarUrl)
+                            img.header__avatar(src="/"+loggedInUser.avatarUrl, crossorigin)
             else
                 li
                     a(href="/login")  Login
