@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 const HTTP_BAD_REQUEST = 400;
 const HTTP_NOT_FOUND = 404;
-
+const isKoyeb = process.env.NODE_ENV === "production";
 export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
 export const postJoin = async (req, res) => {
   const { name, username, email, password, password2, location } = req.body;
@@ -163,7 +163,7 @@ export const postEdit = async (req, res) => {
       });
     }
   }
-  const isKoyeb = process.env.NODE_ENV === "production";
+
   const updatedUser = await User.findByIdAndUpdate(
     _id,
     {

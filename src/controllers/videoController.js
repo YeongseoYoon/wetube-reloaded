@@ -7,6 +7,7 @@ const HTTP_NOT_FOUND = 404;
 const HTTP_FORBIDDEN = 403;
 
 const isKoyeb = process.env.NODE_ENV === "production";
+console.log(isKoyeb);
 
 export const home = async (req, res) => {
   const videos = await Video.find({})
