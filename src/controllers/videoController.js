@@ -45,6 +45,7 @@ export const postEdit = async (req, res) => {
     user: { _id },
   } = req.session;
   const { title, description, hashtags } = req.body;
+
   //exists() takes only a 'filter'. And also it just return a boolean type of value
   //So you can puts argument into exists() to make a conditional sentence
   const video = await Video.findById(id);
@@ -76,12 +77,13 @@ export const postUpload = async (req, res) => {
   } = req.session;
   const { video, thumb } = req.files;
   const { title, description, hashtags } = req.body;
+  const isKoyeb = process.env.NODE_ENV === "production";
   try {
     const newVideo = await Video.create({
       title,
       description,
-      fileUrl: video[0].location,
-      thumbUrl: thumb[0].location,
+      fileUrl: isKoyeb ? video[0].location : video[0].path,
+      thumbUrl: isKoyeb ? thumb[0].location : video[0].path,
       owner: _id,
       hashtags: Video.formatHashtags(hashtags),
     });
