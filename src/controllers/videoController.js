@@ -6,14 +6,11 @@ const HTTP_BAD_REQUEST = 400;
 const HTTP_NOT_FOUND = 404;
 const HTTP_FORBIDDEN = 403;
 
-const isKoyeb = process.env.NODE_ENV === "production";
-console.log(isKoyeb);
-
 export const home = async (req, res) => {
   const videos = await Video.find({})
     .sort({ createdAt: "desc" })
     .populate("owner");
-  return res.render("home", { pageTitle: "Home", videos, isKoyeb });
+  return res.render("home", { pageTitle: "Home", videos });
 };
 export const watch = async (req, res) => {
   const { id } = req.params;
@@ -23,7 +20,7 @@ export const watch = async (req, res) => {
       .status(HTTP_NOT_FOUND)
       .render("404", { pageTitle: "Video Not Found" });
   }
-  return res.render("watch", { pageTitle: video.title, video, isKoyeb });
+  return res.render("watch", { pageTitle: video.title, video });
 };
 export const getEdit = async (req, res) => {
   const { id } = req.params;
@@ -80,7 +77,7 @@ export const postUpload = async (req, res) => {
   } = req.session;
   const { video, thumb } = req.files;
   const { title, description, hashtags } = req.body;
-
+  const isKoyeb = process.env.NODE_ENV === "production";
   try {
     const newVideo = await Video.create({
       title,
@@ -135,7 +132,7 @@ export const search = async (req, res) => {
       },
     }).populate("owner");
   }
-  return res.render("search", { pageTitle: "Search", videos }, isKoyeb);
+  return res.render("search", { pageTitle: "Search", videos });
 };
 
 export const registerView = async (req, res) => {

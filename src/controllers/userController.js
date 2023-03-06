@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 const HTTP_BAD_REQUEST = 400;
 const HTTP_NOT_FOUND = 404;
-const isKoyeb = process.env.NODE_ENV === "production";
+
 export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
 export const postJoin = async (req, res) => {
   const { name, username, email, password, password2, location } = req.body;
@@ -146,7 +146,7 @@ export const postEdit = async (req, res) => {
     body: { name, email, username, location },
     file,
   } = req;
-
+  const isKoyeb = process.env.NODE_ENV === "production";
   let searchParam = [];
   if (sessionEmail !== email) {
     searchParam.push({ email });
@@ -246,6 +246,5 @@ export const see = async (req, res) => {
   return res.render("users/profile", {
     pageTitle: user.name,
     user,
-    isKoyeb,
   });
 };
