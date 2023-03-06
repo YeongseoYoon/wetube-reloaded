@@ -34,15 +34,14 @@ const handleDownload = async () => {
   await ffmpeg.run("-i", files.input, "-r", "60", files.output);
 
   await ffmpeg.run(
-    "-i", 
+    "-i",
     files.input,
     "-ss",
     "00:00:01",
     "-frames:v",
-    "1", 
+    "1",
     files.thumb
-    );
-  ffmpeg.FS("unlink", files.input);
+  );
 
   const tracks = stream.getTracks();
   tracks.forEach((track) => {
@@ -51,16 +50,16 @@ const handleDownload = async () => {
   stream = null;
 
   const mp4File = ffmpeg.FS("readFile", files.output);
-  const thumbFile = ffmpeg.FS("readFile", files.thumb);
-
   const mp4Blob = new Blob([mp4File.buffer], { type: "video/mp4" });
+
+  const thumbFile = ffmpeg.FS("readFile", files.thumb);
   const thumbBlob = new Blob([thumbFile.buffer], { type: "image/jpg" });
 
-  const mp4Url = URL.createObjectURL(mp4Blob);
-  const thumbUrl = URL.createObjectURL(thumbBlob);
+  const mp4URL = URL.createObjectURL(mp4Blob);
+  const thumbURL = URL.createObjectURL(thumbBlob);
 
-  downloadFile(mp4Url, "MyRecording.mp4");
-  downloadFile(thumbUrl, "MyThumbnail.jpg");
+  downloadFile(mp4URL, "MyRecording.mp4");
+  downloadFile(thumbURL, "MyThumbnail.jpg");
 
   ffmpeg.FS("unlink", files.input);
   ffmpeg.FS("unlink", files.output);
@@ -96,22 +95,20 @@ const handleStart = () => {
   setTimeout(() => {
     recorder.stop();
   }, 5000);
-
 };
 
 const init = async () => {
   stream = await navigator.mediaDevices.getUserMedia({
-        audio:true,
-        video: {
-          width: 1024,
-          height: 576,
-        },
-    });
-    video.srcObject = stream;
-    video.play();
+    audio: true,
+    video: {
+      width: 1024,
+      height: 576,
+    },
+  });
+  video.srcObject = stream;
+  video.play();
 };
 
 init();
 
 actionBtn.addEventListener("click", handleStart);
-
