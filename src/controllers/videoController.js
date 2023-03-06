@@ -6,11 +6,13 @@ const HTTP_BAD_REQUEST = 400;
 const HTTP_NOT_FOUND = 404;
 const HTTP_FORBIDDEN = 403;
 
+const isKoyeb = process.env.NODE_ENV === "production";
+
 export const home = async (req, res) => {
   const videos = await Video.find({})
     .sort({ createdAt: "desc" })
     .populate("owner");
-  return res.render("home", { pageTitle: "Home", videos });
+  return res.render("home", { pageTitle: "Home", videos, isKoyeb });
 };
 export const watch = async (req, res) => {
   const { id } = req.params;
@@ -77,13 +79,13 @@ export const postUpload = async (req, res) => {
   } = req.session;
   const { video, thumb } = req.files;
   const { title, description, hashtags } = req.body;
-  const isKoyeb = process.env.NODE_ENV === "production";
+
   try {
     const newVideo = await Video.create({
       title,
       description,
       fileUrl: isKoyeb ? video[0].location : video[0].path,
-      thumbUrl: isKoyeb ? thumb[0].location : video[0].path,
+      thumbUrl: isKoyeb ? thumb[0].location : thumb[0].path,
       owner: _id,
       hashtags: Video.formatHashtags(hashtags),
     });
