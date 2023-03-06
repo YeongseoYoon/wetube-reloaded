@@ -9,9 +9,15 @@ const s3 = new aws.S3({
   },
 });
 
-const multerUploader = multerS3({
+const s3ImageUploader = multerS3({
   s3: s3,
-  bucket: "yoontube",
+  bucket: "yoontube/images",
+  acl: "public-read",
+});
+
+const s3VideoUploader = multerS3({
+  s3: s3,
+  bucket: "yoontube/videos",
   acl: "public-read",
 });
 
@@ -43,10 +49,10 @@ export const publicOnlyMiddleware = (req, res, next) => {
 export const videoUpload = multer({
   dest: "uploads/videos/",
   limits: { fileSize: 10000000 },
-  storage: multerUploader,
+  storage: s3VideoUploader,
 });
 export const avatarUpload = multer({
   dest: "uploads/avatars/",
   limits: { fileSize: 3000000 },
-  storage: multerUploader,
+  storage: s3ImageUploader,
 });
