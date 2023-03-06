@@ -22,7 +22,7 @@ export const watch = async (req, res) => {
       .status(HTTP_NOT_FOUND)
       .render("404", { pageTitle: "Video Not Found" });
   }
-  return res.render("watch", { pageTitle: video.title, video });
+  return res.render("watch", { pageTitle: video.title, video, isKoyeb });
 };
 export const getEdit = async (req, res) => {
   const { id } = req.params;
@@ -134,7 +134,7 @@ export const search = async (req, res) => {
       },
     }).populate("owner");
   }
-  return res.render("search", { pageTitle: "Search", videos });
+  return res.render("search", { pageTitle: "Search", videos }, isKoyeb);
 };
 
 export const registerView = async (req, res) => {

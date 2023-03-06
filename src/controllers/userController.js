@@ -246,5 +246,6 @@ export const see = async (req, res) => {
   return res.render("users/profile", {
     pageTitle: user.name,
     user,
+    isKoyeb,
   });
 };
