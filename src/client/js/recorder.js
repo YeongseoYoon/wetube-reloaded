@@ -43,23 +43,17 @@ const handleDownload = async () => {
     files.thumb
   );
 
-  const tracks = stream.getTracks();
-  tracks.forEach((track) => {
-    track.stop();
-  });
-  stream = null;
-
   const mp4File = ffmpeg.FS("readFile", files.output);
   const mp4Blob = new Blob([mp4File.buffer], { type: "video/mp4" });
 
   const thumbFile = ffmpeg.FS("readFile", files.thumb);
   const thumbBlob = new Blob([thumbFile.buffer], { type: "image/jpg" });
 
-  const mp4URL = URL.createObjectURL(mp4Blob);
-  const thumbURL = URL.createObjectURL(thumbBlob);
+  const mp4Url = URL.createObjectURL(mp4Blob);
+  const thumbUrl = URL.createObjectURL(thumbBlob);
 
-  downloadFile(mp4URL, "MyRecording.mp4");
-  downloadFile(thumbURL, "MyThumbnail.jpg");
+  downloadFile(mp4Url, "MyRecording.mp4");
+  downloadFile(thumbUrl, "MyThumbnail.jpg");
 
   ffmpeg.FS("unlink", files.input);
   ffmpeg.FS("unlink", files.output);
@@ -73,6 +67,11 @@ const handleDownload = async () => {
   init();
   actionBtn.innerText = "Record Again";
   actionBtn.addEventListener("click", handleStart);
+  const tracks = stream.getTracks();
+  tracks.forEach((track) => {
+    track.stop();
+  });
+  stream = null;
 };
 
 const handleStart = () => {
