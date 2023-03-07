@@ -36,16 +36,18 @@ block content
         if loggedIn
             div.video__add-comments
                 form.video__comment-form#commentForm
-                    textarea(cols="30", rows="10", placeholder="Write a nice commment...")
+                    textarea(cols="30", rows="10", placeholder="Write a nice commment...")#textarea
                     button Add Comment
     div.video__comments
         ul
             each comment in video.comments.reverse()
                 li.video__comment(data-id=comment.id)
                     i.fas.fa-comment
-                    span  #{comment.text}
+                    span.comment__text  #{comment.text}
                     if loggedIn && (loggedInUser._id === String(comment.owner)) 
+                        span.video__comment__update-btn ✏️
                         span.video__comment__delete-btn ❌
+
 block scripts
     script(src="/static/js/videoPlayer.js")
     if loggedIn

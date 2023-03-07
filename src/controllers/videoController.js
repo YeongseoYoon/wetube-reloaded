@@ -152,10 +152,13 @@ export const createComment = async (req, res) => {
     body: { text },
     params: { id },
   } = req;
+  if (text === "") {
+    return res.sendStatus(HTTP_BAD_REQUEST);
+  }
   const video = await Video.findById(id);
   if (!video) {
     //use sendStatus to kill the request
-    return res.sendStatus(404);
+    return res.sendStatus(HTTP_NOT_FOUND);
   }
   const comment = await Comment.create({
     text,
@@ -177,16 +180,35 @@ export const deleteComment = async (req, res) => {
   const comment = await Comment.findById(commentId).populate("owner");
   const videoId = comment.video;
   if (String(_id) != String(comment.owner._id)) {
-    return res.sendStatus(404);
+    return res.sendStatus(HTTP_NOT_FOUND);
   }
 
   const video = await Video.findById(videoId);
   if (!video) {
-    return res.sendStatus(404);
+    return res.sendStatus(HTTP_NOT_FOUND);
   }
 
   video.comments.splice(video.comments.indexOf(commentId), 1);
   await Comment.findByIdAndDelete(commentId);
   video.save();
+  return res.sendStatus(201);
+};
+
+export const updateComment = async (req, res) => {
+  const {
+    session: { user },
+    body: { text },
+    params: { commentId },
+  } = req;
+  if (text === "") {
+    return res.sendStatus(HTTP_BAD_REQUEST);
+  }
+  const comment = await Comment.findById(commentId).populate("owner");
+  if (user._id !== String(comment.owner._id)) {
+    return res.sendStatus(HTTP_FORBIDDEN);
+  }
+  await Comment.findByIdAndUpdate(commentId, {
+    text,
+  });
   return res.sendStatus(201);
 };

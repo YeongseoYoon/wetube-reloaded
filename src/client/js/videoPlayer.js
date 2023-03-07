@@ -60,13 +60,13 @@ const formatTime = (seconds) =>
   new Date(seconds * 1000).toISOString().substring(11, 19);
 
 const handleLoadedMetadata = () => {
-  totalTime.innerText = formatTime(Math.floor(video.duration));
-  timeline.max = Math.floor(video.duration);
+  totalTime.innerText = formatTime(Math.ceil(video.duration));
+  timeline.max = Math.ceil(video.duration);
 };
 
 const handleTimeUpdate = () => {
-  currentTime.innerText = formatTime(Math.floor(video.currentTime));
-  timeline.value = Math.floor(video.currentTime);
+  currentTime.innerText = formatTime(Math.ceil(video.currentTime));
+  timeline.value = Math.ceil(video.currentTime);
 };
 
 const handleTimelineChange = (event) => {
@@ -113,18 +113,18 @@ const changeVideoTime = (seconds) => {
   video.currentTime += seconds;
 };
 
-document.addEventListener("keyup", (event) => {
-  if (event.code === "Space") {
-    handlePlayClick();
+document.addEventListener("keydown", (event) => {
+  if (event.code === "Space" && event.target.id !== "textarea") {
     event.preventDefault();
+    handlePlayClick();
   }
-  if (event.code === "ArrowRight") {
+  if (event.code === "ArrowRight" && event.target.id !== "textarea") {
     changeVideoTime(5);
   }
-  if (event.code === "ArrowLeft") {
+  if (event.code === "ArrowLeft" && event.target.id !== "textarea") {
     changeVideoTime(-5);
   }
-  if (event.code === "KeyM") {
+  if (event.code === "KeyM" && event.target.id !== "textarea") {
     handleMute();
   }
 });
@@ -135,6 +135,7 @@ const handleEnded = async () => {
     method: "POST",
   });
 };
+handleLoadedMetadata();
 playBtn.addEventListener("click", handlePlayClick);
 muteBtn.addEventListener("click", handleMute);
 volumeRange.addEventListener("input", handleVolumeChange);
@@ -146,4 +147,3 @@ videoContainer.addEventListener("mousemove", handleMouseMove);
 videoContainer.addEventListener("mouseleave", handleMouseLeave);
 timeline.addEventListener("input", handleTimelineChange);
 fullScreenBtn.addEventListener("click", handleFullscreen);
-handleLoadedMetadata();

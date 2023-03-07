@@ -1,6 +1,7 @@
 const videoContainer = document.getElementById("videoContainer");
 const form = document.getElementById("commentForm");
-const deleteBtn = document.querySelectorAll(".video__comment__delete-btn");
+
+let tempComment;
 
 const addComment = (text, id) => {
   const videoComments = document.querySelector(".video__comments ul");
@@ -9,14 +10,19 @@ const addComment = (text, id) => {
   newComment.className = "video__comment";
   const icon = document.createElement("i");
   icon.className = "fas fa-comment";
-  const span = document.createElement("span");
-  const span2 = document.createElement("span");
-  span2.className = "video__comment__delete-btn";
-  span2.innerText = "❌";
-  span.innerText = ` ${text}`;
+  const commentText = document.createElement("span");
+  commentText.className = "comment__text";
+  const deleteBtn = document.createElement("span");
+  deleteBtn.className = "video__comment__delete-btn";
+  deleteBtn.innerText = "❌";
+  const editBtn = document.createElement("span");
+  editBtn.className = "video__comment__update-btn";
+  editBtn.innerText = "✏️";
+  commentText.innerText = ` ${text}`;
   newComment.appendChild(icon);
-  newComment.appendChild(span);
-  newComment.appendChild(span2);
+  newComment.appendChild(commentText);
+  newComment.appendChild(editBtn);
+  newComment.appendChild(deleteBtn);
   videoComments.prepend(newComment);
   getComment();
 };
@@ -63,8 +69,10 @@ const getComment = () => {
   const comments = document.querySelectorAll(".video__comment");
   if (comments.length !== 0) {
     comments.forEach((comment) => {
+      const btnUpdate = comment.querySelector(".video__comment__update-btn");
       const btnDelete = comment.querySelector(".video__comment__delete-btn");
       btnDelete.addEventListener("click", handleDeleteComment);
+      btnUpdate.addEventListener("click", handleEditCommentBtn);
     });
   }
 };
@@ -94,6 +102,70 @@ const handleEnter = async (event) => {
     }
   }
 };
+
+const handleEditCommentBtn = async (event) => {
+  event.target.innerText = "💾";
+  const commentText = event.target.parentNode.querySelector(".comment__text");
+  tempComment = commentText.innerText;
+  commentText.classList.add("edit-line");
+  commentText.contentEditable = true;
+  event.target.removeEventListener("click", handleEditCommentBtn);
+  event.target.addEventListener("click", handleEditComment);
+};
+
+const handleEditComment = async (event) => {
+  const commentId = event.target.parentNode.dataset.id;
+  const commentText = event.target.parentNode.querySelector(".comment__text");
+  const text = commentText.innerText;
+  const isUpdate = confirm("정말 수정하시겠어요?");
+
+  if (text === "" || text.trim() === "") {
+    alert("한글자 이상 입력되어야 합니다.");
+    commentText.innerText = tempComment;
+    event.target.innerText = "✏️";
+    commentText.classList.remove("edit-line");
+    commentText.contentEditable = false;
+    event.target.removeEventListener("click", handleEditComment);
+    event.target.addEventListener("click", handleEditCommentBtn);
+    getComment();
+    return;
+  }
+  if (isUpdate) {
+    const response = await fetch(`/api/comments/${commentId}/update`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text }),
+    });
+    if (response.status === 201) {
+      event.target.innerText = "✏️";
+      commentText.classList.remove("edit-line");
+      commentText.contentEditable = false;
+      event.target.removeEventListener("click", handleEditComment);
+      event.target.addEventListener("click", handleEditCommentBtn);
+      getComment();
+    }
+  } else {
+    commentText.innerText = tempComment;
+    event.target.innerText = "✏️";
+    commentText.classList.remove("edit-line");
+    commentText.contentEditable = false;
+    event.target.removeEventListener("click", handleEditComment);
+    event.target.addEventListener("click", handleEditCommentBtn);
+    getComment();
+  }
+};
+
+const regExpSpace = (str) => {
+  const pattern = /^\s+|\s+$/g;
+  if (str.match(pattern)) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 if (form) {
   form.addEventListener("submit", handleSubmit);
   window.addEventListener("keydown", handleEnter);
