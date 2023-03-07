@@ -18,6 +18,7 @@ const addComment = (text, id) => {
   newComment.appendChild(span);
   newComment.appendChild(span2);
   videoComments.prepend(newComment);
+  getComment();
 };
 
 const handleSubmit = async (event) => {
@@ -43,25 +44,28 @@ const handleSubmit = async (event) => {
   }
 };
 
-const handleDelete = async (event) => {
-  const comment = event.target.parentNode.parentNode;
-  const commentId = comment.dataset.id;
-  const videoId = videoContainer.dataset.id;
+const handleDeleteComment = async (event) => {
+  const commentId = event.target.parentNode.dataset.id;
 
   const isDelete = confirm("정말 삭제하시겠어요?");
   if (isDelete) {
     const response = await fetch(`/api/comments/${commentId}/delete`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ videoId }),
     });
     if (response.status === 201) {
       event.target.parentNode.remove();
+      getComment();
     }
-  } else {
-    return;
+  }
+};
+
+const getComment = () => {
+  const comments = document.querySelectorAll(".video__comment");
+  if (comments.length !== 0) {
+    comments.forEach((comment) => {
+      const btnDelete = comment.querySelector(".video__comment__delete-btn");
+      btnDelete.addEventListener("click", handleDeleteComment);
+    });
   }
 };
 
@@ -86,6 +90,7 @@ const handleEnter = async (event) => {
       textarea.value = "";
       const { newCommentId } = await response.json();
       addComment(text, newCommentId);
+      textarea.value = "";
     }
   }
 };
@@ -94,6 +99,4 @@ if (form) {
   window.addEventListener("keydown", handleEnter);
 }
 
-for (let i = 0; i < deleteBtn.length; i++) {
-  deleteBtn[i].addEventListener("click", handleDelete);
-}
+window.addEventListener("DOMContentLoaded", getComment);

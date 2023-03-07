@@ -188,5 +188,5 @@ export const deleteComment = async (req, res) => {
   video.comments.splice(video.comments.indexOf(commentId), 1);
   await Comment.findByIdAndDelete(commentId);
   video.save();
-  return res.status(200);
+  return res.sendStatus(201);
 };
