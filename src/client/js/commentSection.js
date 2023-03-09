@@ -5,12 +5,11 @@ let commentLength = document.querySelectorAll(".video__comment").length;
 const headerProfile = document.querySelector("#header__profile");
 
 let tempComment;
-let idNum;
 
 const addComment = (text, id) => {
-  const newNode = headerProfile.cloneNode(true);
-  idNum++;
-  newNode.id = "copyNode" + idNum;
+  const copyNode = headerProfile.cloneNode(true);
+  const newCommentHeader = copyNode.querySelector("img");
+  newCommentHeader.className = "video__comment__avatar";
   const videoComments = document.querySelector(".video__comments ul");
   const newComment = document.createElement("li");
   newComment.dataset.id = id;
