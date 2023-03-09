@@ -23,7 +23,7 @@ const addComment = (text, id) => {
   editBtn.className = "video__comment__update-btn";
   editBtn.innerText = "✏️";
   commentText.innerText = ` ${text}`;
-  newComment.appendChild(newNode);
+  newComment.appendChild(copyNode);
   newComment.appendChild(commentText);
   newComment.appendChild(editBtn);
   newComment.appendChild(deleteBtn);
