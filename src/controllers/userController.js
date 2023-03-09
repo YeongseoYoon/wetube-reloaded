@@ -238,6 +238,7 @@ export const see = async (req, res) => {
       model: "User",
     },
   });
+
   if (!user) {
     return res
       .status(HTTP_NOT_FOUND)

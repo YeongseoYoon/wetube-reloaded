@@ -38,13 +38,21 @@ block content
                 form.video__comment-form#commentForm
                     textarea(cols="30", rows="10", placeholder="Write a nice commment...")#textarea
                     button Add Comment
+    div.video__comments-counting-area 
+        span#video__comments-counting 댓글 #{video.comments.length}개
     div.video__comments
         ul
             each comment in video.comments.reverse()
                 li.video__comment(data-id=comment.id)
-                    i.fas.fa-comment
+                    a(href=`/users/${comment.owner._id}`)
+                        if !comment.owner.avatarUrl
+                            span 😀
+                        else if !isKoyeb
+                            img.video__comment__avatar(src="/"+comment.owner.avatarUrl, crossorigin)
+                        else 
+                            img.video__comment__avatar(src=comment.owner.avatarUrl, crossorigin)
                     span.comment__text  #{comment.text}
-                    if loggedIn && (loggedInUser._id === String(comment.owner)) 
+                    if loggedIn && (loggedInUser._id === String(comment.owner._id)) 
                         span.video__comment__update-btn ✏️
                         span.video__comment__delete-btn ❌
 

@@ -1,15 +1,20 @@
 const videoContainer = document.getElementById("videoContainer");
 const form = document.getElementById("commentForm");
+let commentCount = document.getElementById("video__comments-counting");
+let commentLength = document.querySelectorAll(".video__comment").length;
+const headerProfile = document.querySelector("#header__profile");
 
 let tempComment;
+let idNum;
 
 const addComment = (text, id) => {
+  const newNode = headerProfile.cloneNode(true);
+  idNum++;
+  newNode.id = "copyNode" + idNum;
   const videoComments = document.querySelector(".video__comments ul");
   const newComment = document.createElement("li");
   newComment.dataset.id = id;
   newComment.className = "video__comment";
-  const icon = document.createElement("i");
-  icon.className = "fas fa-comment";
   const commentText = document.createElement("span");
   commentText.className = "comment__text";
   const deleteBtn = document.createElement("span");
@@ -19,7 +24,7 @@ const addComment = (text, id) => {
   editBtn.className = "video__comment__update-btn";
   editBtn.innerText = "✏️";
   commentText.innerText = ` ${text}`;
-  newComment.appendChild(icon);
+  newComment.appendChild(newNode);
   newComment.appendChild(commentText);
   newComment.appendChild(editBtn);
   newComment.appendChild(deleteBtn);
@@ -69,11 +74,17 @@ const getComment = () => {
   const comments = document.querySelectorAll(".video__comment");
   if (comments.length !== 0) {
     comments.forEach((comment) => {
-      const btnUpdate = comment.querySelector(".video__comment__update-btn");
-      const btnDelete = comment.querySelector(".video__comment__delete-btn");
-      btnDelete.addEventListener("click", handleDeleteComment);
-      btnUpdate.addEventListener("click", handleEditCommentBtn);
+      if (comment.querySelector(".video__comment__update-btn")) {
+        const btnUpdate = comment.querySelector(".video__comment__update-btn");
+        const btnDelete = comment.querySelector(".video__comment__delete-btn");
+        btnDelete.addEventListener("click", handleDeleteComment);
+        btnUpdate.addEventListener("click", handleEditCommentBtn);
+      }
     });
+    commentLength = document.querySelectorAll(".video__comment").length;
+    commentCount.innerText = `댓글 ${commentLength}개`;
+  } else {
+    commentCount.innerText = "댓글 0개";
   }
 };
 
@@ -116,8 +127,7 @@ const handleEditCommentBtn = async (event) => {
 const handleEditComment = async (event) => {
   const commentId = event.target.parentNode.dataset.id;
   const commentText = event.target.parentNode.querySelector(".comment__text");
-  const text = commentText.innerText;
-  const isUpdate = confirm("정말 수정하시겠어요?");
+  const text = commentText.innerText.trim();
 
   if (text === "" || text.trim() === "") {
     alert("한글자 이상 입력되어야 합니다.");
@@ -130,6 +140,7 @@ const handleEditComment = async (event) => {
     getComment();
     return;
   }
+  const isUpdate = confirm("정말 수정하시겠어요?");
   if (isUpdate) {
     const response = await fetch(`/api/comments/${commentId}/update`, {
       method: "PUT",

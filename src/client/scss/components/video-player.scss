@@ -37,6 +37,9 @@
         font-size: 12px;
       }
     }
+    .videoControls__time {
+      color: #ffffff;
+    }
     .videoControls__volume {
       display: flex;
       align-items: center;
@@ -46,6 +49,10 @@
           font-size: 20px;
         }
       }
+    }
+
+    i {
+      color: #ffffff;
     }
   }
 }

@@ -114,28 +114,52 @@ const changeVideoTime = (seconds) => {
 };
 
 document.addEventListener("keydown", (event) => {
-  if (event.code === "Space" && event.target.id !== "textarea") {
+  if (
+    event.code === "Space" &&
+    event.target.id !== "textarea" &&
+    event.target.className !== "comment__text"
+  ) {
     event.preventDefault();
     handlePlayClick();
   }
-  if (event.code === "ArrowRight" && event.target.id !== "textarea") {
+  if (
+    event.code === "ArrowRight" &&
+    event.target.id !== "textarea" &&
+    event.target.className !== "comment__text"
+  ) {
     changeVideoTime(5);
   }
-  if (event.code === "ArrowLeft" && event.target.id !== "textarea") {
+  if (
+    event.code === "ArrowLeft" &&
+    event.target.id !== "textarea" &&
+    event.target.className !== "comment__text"
+  ) {
     changeVideoTime(-5);
   }
-  if (event.code === "KeyM" && event.target.id !== "textarea") {
+  if (
+    event.code === "KeyM" &&
+    event.target.id !== "textarea" &&
+    event.target.className !== "comment__text"
+  ) {
     handleMute();
+  }
+  if (
+    event.code === "KeyF" &&
+    event.target.id !== "textarea" &&
+    event.target.className !== "comment__text"
+  ) {
+    handleFullscreen();
   }
 });
 
 const handleEnded = async () => {
   const { id } = videoContainer.dataset;
+  playBtnIcon.classList = "fas fa-play";
   await fetch(`/api/videos/${id}/view`, {
     method: "POST",
   });
 };
-handleLoadedMetadata();
+
 playBtn.addEventListener("click", handlePlayClick);
 muteBtn.addEventListener("click", handleMute);
 volumeRange.addEventListener("input", handleVolumeChange);
@@ -147,3 +171,4 @@ videoContainer.addEventListener("mousemove", handleMouseMove);
 videoContainer.addEventListener("mouseleave", handleMouseLeave);
 timeline.addEventListener("input", handleTimelineChange);
 fullScreenBtn.addEventListener("click", handleFullscreen);
+handleLoadedMetadata();

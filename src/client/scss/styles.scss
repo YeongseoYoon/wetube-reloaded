@@ -20,7 +20,7 @@
 @import "./screens/upload.scss";
 @import "./screens/watch.scss";
 // Defaults
-*{
+* {
   cursor: default;
 }
 
@@ -29,7 +29,7 @@ a {
   text-decoration: none;
 }
 
-button{
+button {
   cursor: pointer;
 }
 
@@ -37,7 +37,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   background-color: $bg;
-  color: white;
+  color: #0f0f0f;
 }
 
 main {
@@ -75,4 +75,3 @@ main {
     color: white;
   }
 }
-

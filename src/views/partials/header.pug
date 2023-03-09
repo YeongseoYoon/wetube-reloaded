@@ -14,7 +14,7 @@ header
                 li 
                     a(href="/users/logout") Log Out
                 li
-                    a(href=`/users/${loggedInUser._id}`)
+                    a(href=`/users/${loggedInUser._id}`)#header__profile
                         if !loggedInUser.avatarUrl 
                             span 😀
                         else if isKoyeb
