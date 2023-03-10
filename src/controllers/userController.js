@@ -74,6 +74,25 @@ export const startGithubLogin = (req, res) => {
   return res.redirect(finalUrl);
 };
 
+export const startKakaoLogin = (req, res) => {
+  const baseUrl = "https://kauth.kakao.com/oauth/authorize";
+  let envPath;
+  if (res.locals.isKoyeb) {
+    envPath = "https://yoontube-yeongseoyoon.koyeb.app";
+  } else {
+    envPath = "http://localhost:4000";
+  }
+  const config = {
+    client_id: process.env.KAKAO_CLIENT,
+    redirect_uri: envPath + "/users/kakao/finish",
+    response_type: "code",
+  };
+  const params = new URLSearchParams(config).toString();
+
+  const finalUrl = `${baseUrl}?${params}`;
+  return res.redirect(finalUrl);
+};
+
 export const finishGithubLogin = async (req, res) => {
   const baseUrl = "https://github.com/login/oauth/access_token";
   const config = {
@@ -124,6 +143,66 @@ export const finishGithubLogin = async (req, res) => {
         password: "",
         socialOnly: true,
         location: userData.location,
+      });
+    }
+    req.session.loggedIn = true;
+    req.session.user = user;
+    return res.redirect("/");
+  } else {
+    return res.redirect("/login");
+  }
+};
+export const finishKakaoLogin = async (req, res) => {
+  const baseUrl = "https://kauth.kakao.com/oauth/token";
+  let envPath;
+  if (res.locals.isKoyeb) {
+    envPath = "https://yoontube-yeongseoyoon.koyeb.app";
+  } else {
+    envPath = "http://localhost:4000";
+  }
+  const config = {
+    client_id: process.env.KAKAO_CLIENT,
+    client_secret: process.env.KAKAO_SECRET,
+    grant_type: "authorization_code",
+    redirect_uri: envPath + "/users/kakao/finish",
+    code: req.query.code,
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+  const kakaoTokenRequest = await (
+    await fetch(finalUrl, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+  ).json();
+  if ("access_token" in kakaoTokenRequest) {
+    const { access_token } = kakaoTokenRequest;
+    const apiUrl = "https://kapi.kakao.com/v2/user/me";
+    const userData = await (
+      await fetch(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+          "Content-type": "application/json",
+        },
+      })
+    ).json();
+    if (!userData.kakao_account.email) {
+      return res.redirect("/login");
+    }
+    let user = await User.findOne({ email: userData.kakao_account.email });
+    if (!user) {
+      user = await User.create({
+        avatarUrl: userData.properties.profile_image,
+        name: userData.properties.nickname
+          ? userData.properties.nickname
+          : userData.properties.nickname,
+        username: userData.properties.nickname,
+        email: userData.kakao_account.email,
+        password: "",
+        socialOnly: true,
+        location: "Undefined",
       });
     }
     req.session.loggedIn = true;
