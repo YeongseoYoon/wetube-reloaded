@@ -71,6 +71,7 @@ export const startGithubLogin = (req, res) => {
   };
   const params = new URLSearchParams(config).toString();
   const finalUrl = `${baseUrl}?${params}`;
+  console.log(finalUrl);
   return res.redirect(finalUrl);
 };
 
@@ -102,6 +103,7 @@ export const finishGithubLogin = async (req, res) => {
   };
   const params = new URLSearchParams(config).toString();
   const finalUrl = `${baseUrl}?${params}`;
+  console.log(finalUrl);
   const tokenRequest = await (
     await fetch(finalUrl, {
       method: "POST",
