@@ -20,7 +20,12 @@ header
                         else if isKoyeb
                             img.header__avatar(src=loggedInUser.avatarUrl,crossorigin)
                         else
-                            img.header__avatar(src="/"+loggedInUser.avatarUrl, crossorigin)
+                            if loggedInUser.avatarUrl.includes("githubusercontent")
+                                img.header__avatar(src=loggedInUser.avatarUrl, crossorigin)
+                            else if loggedInUser.avatarUrl.includes("kakaocdn")
+                                img.header__avatar(src=loggedInUser.avatarUrl, crossorigin)
+                            else
+                                img.header__avatar(src="/"+loggedInUser.avatarUrl, crossorigin)
             else
                 li
                     a(href="/login")  Login

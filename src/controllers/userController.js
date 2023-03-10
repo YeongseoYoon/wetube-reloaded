@@ -76,10 +76,15 @@ export const startGithubLogin = (req, res) => {
 
 export const startKakaoLogin = (req, res) => {
   const baseUrl = "https://kauth.kakao.com/oauth/authorize";
-  const envPath = "http://localhost:4000/users/kakao/finish";
+  let envPath;
+  if (res.locals.isKoyeb) {
+    envPath = "https://yoontube-yeongseoyoon.koyeb.app";
+  } else {
+    envPath = "http://localhost:4000";
+  }
   const config = {
     client_id: process.env.KAKAO_CLIENT,
-    redirect_uri: envPath,
+    redirect_uri: envPath + "/users/kakao/finish",
     response_type: "code",
   };
   const params = new URLSearchParams(config).toString();
@@ -149,13 +154,17 @@ export const finishGithubLogin = async (req, res) => {
 };
 export const finishKakaoLogin = async (req, res) => {
   const baseUrl = "https://kauth.kakao.com/oauth/token";
-  const envPath = "http://localhost:4000/users/kakao/finish";
-
+  let envPath;
+  if (res.locals.isKoyeb) {
+    envPath = "https://yoontube-yeongseoyoon.koyeb.app";
+  } else {
+    envPath = "http://localhost:4000";
+  }
   const config = {
     client_id: process.env.KAKAO_CLIENT,
     client_secret: process.env.KAKAO_SECRET,
     grant_type: "authorization_code",
-    redirect_uri: envPath,
+    redirect_uri: envPath + "/users/kakao/finish",
     code: req.query.code,
   };
   const params = new URLSearchParams(config).toString();
@@ -170,7 +179,7 @@ export const finishKakaoLogin = async (req, res) => {
   ).json();
   if ("access_token" in kakaoTokenRequest) {
     const { access_token } = kakaoTokenRequest;
-    const apiUrl = "https://kauth.kakao.com/v2/user/me";
+    const apiUrl = "https://kapi.kakao.com/v2/user/me";
     const userData = await (
       await fetch(apiUrl, {
         headers: {
