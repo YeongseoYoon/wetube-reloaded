@@ -8,13 +8,9 @@ let tempComment;
 
 const addComment = (text, id, owner) => {
   const copyNode = headerProfile.cloneNode(true);
-  if (copyNode.querySelector("img")) {
-    const newCommentHeader = copyNode.querySelector("img");
-    newCommentHeader.className = "video__comment__avatar";
-  } else {
-    const newCommentHeader = copyNode.querySelector("span");
-    newCommentHeader.className = "video__comment__avatar";
-  }
+  const newCommentHeader = copyNode.querySelector("img");
+  newCommentHeader.className = "video__comment__avatar";
+
   const videoComments = document.querySelector(".video__comments ul");
   const newComment = document.createElement("li");
   newComment.dataset.id = id;

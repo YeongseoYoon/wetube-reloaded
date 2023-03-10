@@ -46,11 +46,18 @@ block content
                 li.video__comment(data-id=comment.id)
                     a(href=`/users/${comment.owner._id}`)
                         if !comment.owner.avatarUrl
-                            span.video__comment__avatar 😀
+                            img.video__comment__avatar(src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png",crossorigin)
                         else if !isKoyeb
-                            img.video__comment__avatar(src="/"+comment.owner.avatarUrl, crossorigin)
+                            if comment.owner.avatarUrl.includes("amazonaws")            
+                                img.video__comment__avatar(src=src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png", crossorigin)
+                            else if comment.owner.avatarUrl.includes("githubusercontent")
+                                img.video__comment__avatar(src=comment.owner.avatarUrl, crossorigin)
+                            else 
+                                img.video__comment__avatar(src="/"+comment.owner.avatarUrl, crossorigin)
                         else 
                             img.video__comment__avatar(src=comment.owner.avatarUrl, crossorigin)
+
+           
                     div.video__comment-wrapper
                         div.video__comment-user 
                             span.comment__name #{comment.owner.name}
