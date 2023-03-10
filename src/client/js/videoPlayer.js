@@ -117,7 +117,7 @@ document.addEventListener("keydown", (event) => {
   if (
     event.code === "Space" &&
     event.target.id !== "textarea" &&
-    event.target.className !== "comment__text"
+    event.target.classList[0] !== "comment__text"
   ) {
     event.preventDefault();
     handlePlayClick();
@@ -125,28 +125,28 @@ document.addEventListener("keydown", (event) => {
   if (
     event.code === "ArrowRight" &&
     event.target.id !== "textarea" &&
-    event.target.className !== "comment__text"
+    event.target.classList[0] !== "comment__text"
   ) {
     changeVideoTime(5);
   }
   if (
     event.code === "ArrowLeft" &&
     event.target.id !== "textarea" &&
-    event.target.className !== "comment__text"
+    event.target.classList[0] !== "comment__text"
   ) {
     changeVideoTime(-5);
   }
   if (
     event.code === "KeyM" &&
     event.target.id !== "textarea" &&
-    event.target.className !== "comment__text"
+    event.target.classList[0] !== "comment__text"
   ) {
     handleMute();
   }
   if (
     event.code === "KeyF" &&
     event.target.id !== "textarea" &&
-    event.target.className !== "comment__text"
+    event.target.classList[0] !== "comment__text"
   ) {
     handleFullscreen();
   }

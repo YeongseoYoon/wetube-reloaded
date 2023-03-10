@@ -5,9 +5,16 @@ mixin video(video)
                 img.video-mixin__thumb-img(src="/"+video.thumbUrl, crossorigin)
             else
                 img.video-mixin__thumb-img(src=video.thumbUrl, crossorigin)
-
-        div.video-mixin__data
-            span.video-mixin__title=video.title
-            div.video-mixin__meta
-                span #{video.owner.name} • 
-                span #{video.meta.views} 회
+        div.video-mixin__sub
+            div.video-mixin__profile 
+                if !video.owner.avatarUrl
+                    span 😀
+                else if !isKoyeb
+                    img.video__avatar(src="/"+video.owner.avatarUrl, crossorigin)
+                else 
+                    img.video__avatar(src=video.owner.avatarUrl, crossorigin)
+            div.video-mixin__data
+                span.video-mixin__title=video.title
+                div.video-mixin__meta
+                    span #{video.owner.name} • 
+                    span #{video.meta.views} 회

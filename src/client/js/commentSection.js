@@ -6,16 +6,30 @@ const headerProfile = document.querySelector("#header__profile");
 
 let tempComment;
 
-const addComment = (text, id) => {
+const addComment = (text, id, owner) => {
   const copyNode = headerProfile.cloneNode(true);
   if (copyNode.querySelector("img")) {
     const newCommentHeader = copyNode.querySelector("img");
+    newCommentHeader.className = "video__comment__avatar";
+  } else {
+    const newCommentHeader = copyNode.querySelector("span");
     newCommentHeader.className = "video__comment__avatar";
   }
   const videoComments = document.querySelector(".video__comments ul");
   const newComment = document.createElement("li");
   newComment.dataset.id = id;
   newComment.className = "video__comment";
+  const commentWrapper = document.createElement("div");
+  commentWrapper.className = "video__comment-wrapper";
+  const commentUser = document.createElement("div");
+  commentUser.className = "video__comment-user";
+  const commentContent = document.createElement("div");
+  commentContent.className = "video__comment-content";
+
+  const commentName = document.createElement("span");
+  commentName.className = "comment__name";
+  commentName.innerText = owner;
+
   const commentText = document.createElement("span");
   commentText.className = "comment__text";
   const deleteBtn = document.createElement("span");
@@ -26,9 +40,13 @@ const addComment = (text, id) => {
   editBtn.innerText = "✏️";
   commentText.innerText = ` ${text}`;
   newComment.appendChild(copyNode);
-  newComment.appendChild(commentText);
-  newComment.appendChild(editBtn);
-  newComment.appendChild(deleteBtn);
+  newComment.appendChild(commentWrapper);
+  commentWrapper.appendChild(commentUser);
+  commentWrapper.appendChild(commentContent);
+  commentUser.appendChild(commentName);
+  commentContent.appendChild(commentText);
+  commentContent.appendChild(editBtn);
+  commentContent.appendChild(deleteBtn);
   videoComments.prepend(newComment);
   getComment();
 };
@@ -50,14 +68,14 @@ const handleSubmit = async (event) => {
   });
   if (response.status === 201) {
     textarea.value = "";
-    const { newCommentId } = await response.json();
-    addComment(text, newCommentId);
+    const { newCommentId, owner } = await response.json();
+    addComment(text, newCommentId, owner);
     textarea.value = "";
   }
 };
 
 const handleDeleteComment = async (event) => {
-  const commentId = event.target.parentNode.dataset.id;
+  const commentId = event.target.parentNode.parentNode.parentNode.dataset.id;
 
   const isDelete = confirm("정말 삭제하시겠어요?");
   if (isDelete) {
@@ -65,7 +83,7 @@ const handleDeleteComment = async (event) => {
       method: "DELETE",
     });
     if (response.status === 201) {
-      event.target.parentNode.remove();
+      event.target.parentNode.parentNode.parentNode.remove();
       getComment();
     }
   }
@@ -108,8 +126,8 @@ const handleEnter = async (event) => {
     });
     if (response.status === 201) {
       textarea.value = "";
-      const { newCommentId } = await response.json();
-      addComment(text, newCommentId);
+      const { newCommentId, owner } = await response.json();
+      addComment(text, newCommentId, owner);
       textarea.value = "";
     }
   }
@@ -126,7 +144,7 @@ const handleEditCommentBtn = async (event) => {
 };
 
 const handleEditComment = async (event) => {
-  const commentId = event.target.parentNode.dataset.id;
+  const commentId = event.target.parentNode.parentNode.parentNode.dataset.id;
   const commentText = event.target.parentNode.querySelector(".comment__text");
   const text = commentText.innerText.trim();
 

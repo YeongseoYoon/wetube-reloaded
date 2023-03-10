@@ -46,15 +46,19 @@ block content
                 li.video__comment(data-id=comment.id)
                     a(href=`/users/${comment.owner._id}`)
                         if !comment.owner.avatarUrl
-                            span 😀
+                            span.video__comment__avatar 😀
                         else if !isKoyeb
                             img.video__comment__avatar(src="/"+comment.owner.avatarUrl, crossorigin)
                         else 
                             img.video__comment__avatar(src=comment.owner.avatarUrl, crossorigin)
-                    span.comment__text  #{comment.text}
-                    if loggedIn && (loggedInUser._id === String(comment.owner._id)) 
-                        span.video__comment__update-btn ✏️
-                        span.video__comment__delete-btn ❌
+                    div.video__comment-wrapper
+                        div.video__comment-user 
+                            span.comment__name #{comment.owner.name}
+                        div.video__comment-content
+                            span.comment__text  #{comment.text}
+                            if loggedIn && (loggedInUser._id === String(comment.owner._id)) 
+                                span.video__comment__update-btn ✏️
+                                span.video__comment__delete-btn ❌
 
 block scripts
     script(src="/static/js/videoPlayer.js")

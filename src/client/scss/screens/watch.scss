@@ -25,6 +25,7 @@
   margin: 0 auto;
   margin-top: 20px;
   .video__comment {
+    display: flex;
     padding: 10px;
     border-radius: 9999px;
     background-color: white;
@@ -41,6 +42,8 @@
   }
 
   .video__comment__avatar {
+    display: block;
+    text-align: center;
     width: 40px;
     height: 40px;
     border-radius: 50%;
