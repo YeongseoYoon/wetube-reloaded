@@ -179,7 +179,7 @@ export const finishKakaoLogin = async (req, res) => {
   ).json();
   if ("access_token" in kakaoTokenRequest) {
     const { access_token } = kakaoTokenRequest;
-    const apiUrl = "https://kapi.kakao.com/v2/user/me";
+    const apiUrl = "https://kauth.kakao.com/v2/user/me";
     const userData = await (
       await fetch(apiUrl, {
         headers: {
