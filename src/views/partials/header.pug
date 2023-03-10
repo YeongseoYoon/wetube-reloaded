@@ -16,15 +16,15 @@ header
                 li
                     a(href=`/users/${loggedInUser._id}`)#header__profile
                         if !loggedInUser.avatarUrl 
-                            span 😀
+                            img.header__avatar(src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png",crossorigin)
                         else if isKoyeb
                             img.header__avatar(src=loggedInUser.avatarUrl,crossorigin)
-                        else
-                            if loggedInUser.avatarUrl.includes("githubusercontent")
+                        else 
+                            if loggedInUser.avatarUrl.includes("amazonaws")            
+                                img.header__avatar(src=src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png", crossorigin)
+                            else if loggedInUser.avatarUrl.includes("githubusercontent")
                                 img.header__avatar(src=loggedInUser.avatarUrl, crossorigin)
-                            else if loggedInUser.avatarUrl.includes("kakaocdn")
-                                img.header__avatar(src=loggedInUser.avatarUrl, crossorigin)
-                            else
+                            else 
                                 img.header__avatar(src="/"+loggedInUser.avatarUrl, crossorigin)
             else
                 li

@@ -194,7 +194,8 @@ export const finishKakaoLogin = async (req, res) => {
     let user = await User.findOne({ email: userData.kakao_account.email });
     if (!user) {
       user = await User.create({
-        avatarUrl: userData.properties.profile_image,
+        avatarUrl:
+          "https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png",
         name: userData.properties.nickname
           ? userData.properties.nickname
           : userData.properties.nickname,
