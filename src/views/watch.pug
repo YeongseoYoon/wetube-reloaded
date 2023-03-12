@@ -25,14 +25,35 @@ block content
                     i.fas.fa-expand
 
     div.video__data
-        p.video__title=video.title
-        small.video__owner Uploaded by 
-            a(href=`/users/${video.owner._id}`)=video.owner.name
-        small.video__createdAt=new Date(video.createdAt).toLocaleDateString("ko-kr", {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})
-            if String(video.owner._id) === String(loggedInUser._id)
-                a(href=`${video.id}/edit`) Edit Video &rarr;
-                br
-                a(href=`${video.id}/delete`) Delete Video &rarr;
+        div.video__data-title
+            p.video__title=video.title
+        div.video__data-content
+            div.video__profile
+                a(href=`/users/${video.owner._id}`)
+                    if !video.owner.avatarUrl
+                        img.small__avatar(src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png",crossorigin)
+                    else if !isKoyeb
+                        if video.owner.avatarUrl.includes("amazonaws")            
+                            img.small__avatar(src=src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png", crossorigin)
+                        else if video.owner.avatarUrl.includes("githubusercontent")
+                            img.small__avatar(src=video.owner.avatarUrl, crossorigin)
+                        else 
+                            img.small__avatar(src="/"+video.owner.avatarUrl, crossorigin)
+                    else 
+                        img.small__avatar(src=video.owner.avatarUrl, crossorigin)
+
+            div.video__comment-wrapper
+                div.video__comment-user 
+                    small.video__owner 
+                        a(href=`/users/${video.owner._id}`)=video.owner.name
+                div.video__comment-content
+                        small.video__createdAt=new Date(video.createdAt).toLocaleDateString("ko-kr", {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})
+                        if String(video.owner._id) === String(loggedInUser._id)
+                            a(href=`${video.id}/edit`) Edit Video &rarr;
+                            br
+                            a(href=`${video.id}/delete`) Delete Video &rarr;
+
+       
         if loggedIn
             div.video__add-comments
                 form.video__comment-form#commentForm
@@ -46,16 +67,16 @@ block content
                 li.video__comment(data-id=comment.id)
                     a(href=`/users/${comment.owner._id}`)
                         if !comment.owner.avatarUrl
-                            img.video__comment__avatar(src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png",crossorigin)
+                            img.small__avatar(src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png",crossorigin)
                         else if !isKoyeb
                             if comment.owner.avatarUrl.includes("amazonaws")            
-                                img.video__comment__avatar(src=src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png", crossorigin)
+                                img.small__avatar(src=src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png", crossorigin)
                             else if comment.owner.avatarUrl.includes("githubusercontent")
-                                img.video__comment__avatar(src=comment.owner.avatarUrl, crossorigin)
+                                img.small__avatar(src=comment.owner.avatarUrl, crossorigin)
                             else 
-                                img.video__comment__avatar(src="/"+comment.owner.avatarUrl, crossorigin)
+                                img.small__avatar(src="/"+comment.owner.avatarUrl, crossorigin)
                         else 
-                            img.video__comment__avatar(src=comment.owner.avatarUrl, crossorigin)
+                            img.small__avatar(src=comment.owner.avatarUrl, crossorigin)
 
            
                     div.video__comment-wrapper

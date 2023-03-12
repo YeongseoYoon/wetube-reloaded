@@ -8,16 +8,16 @@ mixin video(video)
         div.video-mixin__sub
             div.video-mixin__profile 
                 if !video.owner.avatarUrl
-                    img.video__avatar(src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png",crossorigin)
+                    img.small__avatar(src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png",crossorigin)
                 else if !isKoyeb
                     if video.owner.avatarUrl.includes("amazonaws")            
-                        img.video__avatar(src=src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png", crossorigin)
+                        img.small__avatar(src=src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png", crossorigin)
                     else if video.owner.avatarUrl.includes("githubusercontent")
-                        img.video__avatar(src=video.owner.avatarUrl, crossorigin)
+                        img.small__avatar(src=video.owner.avatarUrl, crossorigin)
                     else 
-                        img.video__avatar(src="/"+video.owner.avatarUrl, crossorigin)
+                        img.small__avatar(src="/"+video.owner.avatarUrl, crossorigin)
                 else
-                    img.video__avatar(src=video.owner.avatarUrl,crossorigin)
+                    img.small__avatar(src=video.owner.avatarUrl,crossorigin)
 
 
             div.video-mixin__data

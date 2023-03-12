@@ -3,7 +3,10 @@ include mixins/video
 
 block content
     form(method="GET").search__form
-        input(placeholder="Search by Title", required, type="text", name="keyword", maxLength=80)
+        select(id="search-select")
+            option(value="title") Title 
+            option(value="hashtag") HashTag
+        input(placeholder="Search", required, type="text", name="keyword", maxLength=80)
         button
             i.fas.fa-search
     div.video-grid

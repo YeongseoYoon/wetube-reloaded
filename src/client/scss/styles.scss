@@ -19,14 +19,30 @@
 @import "./screens/edit-profile.scss";
 @import "./screens/upload.scss";
 @import "./screens/watch.scss";
+
+@import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
+
 // Defaults
 * {
   cursor: default;
+  font-family: "Jua", sans-serif;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  cursor: pointer;
+}
+
+i {
+  cursor: pointer;
+}
+input[type="text"] {
+  cursor: text;
+}
+input[type="submit"],
+input[type="range"] {
+  cursor: pointer;
 }
 
 button {
@@ -34,8 +50,7 @@ button {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: "Jua", sans-serif;
   background-color: $bg;
   color: #0f0f0f;
 }
@@ -72,6 +87,16 @@ main {
   animation-delay: 5s;
   &.error {
     background-color: tomato;
+    color: white;
+  }
+
+  &.info {
+    background-color: rgb(0, 0, 0);
+    color: white;
+  }
+
+  &.sucess {
+    background-color: rgb(27, 175, 255);
     color: white;
   }
 }

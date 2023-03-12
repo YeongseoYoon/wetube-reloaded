@@ -8,6 +8,8 @@ import {
   finishGithubLogin,
   startKakaoLogin,
   finishKakaoLogin,
+  startNaverLogin,
+  finishNaverLogin,
   getChangePassword,
   postChangePassword,
 } from "../controllers/userController";
@@ -34,6 +36,8 @@ userRouter.get("/github/start", publicOnlyMiddleware, startGithubLogin);
 userRouter.get("/github/finish", publicOnlyMiddleware, finishGithubLogin);
 userRouter.get("/kakao/start", publicOnlyMiddleware, startKakaoLogin);
 userRouter.get("/kakao/finish", publicOnlyMiddleware, finishKakaoLogin);
+userRouter.get("/naver/start", publicOnlyMiddleware, startNaverLogin);
+userRouter.get("/naver/finish", publicOnlyMiddleware, finishNaverLogin);
 userRouter.get("/:id", see);
 
 export default userRouter;

@@ -9,28 +9,29 @@
     .video-mixin__thumb-img {
       display: block;
       width: 100%;
-      height: auto;
+      height: 100%;
+      cursor: pointer;
     }
   }
   .video-mixin__sub {
     display: flex;
-    .video-mixin__profile {
-      .video__avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-      }
-    }
+    cursor: pointer;
     .video-mixin__data {
       padding: 0px 15px;
+      cursor: pointer;
       .video-mixin__title {
         font-size: 18px;
         display: block;
         margin-top: 10px;
+        cursor: pointer;
       }
       .video-mixin__meta {
         margin-top: 5px;
         font-size: 12px;
+        cursor: pointer;
+        span {
+          cursor: pointer;
+        }
       }
     }
   }

@@ -43,9 +43,9 @@ export const postJoin = async (req, res) => {
 export const getLogin = (req, res) =>
   res.render("login", { pageTitle: "Login" });
 export const postLogin = async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
   const pageTitle = "Login";
-  const user = await User.findOne({ username, socialOnly: false });
+  const user = await User.findOne({ email, socialOnly: false });
   if (!user) {
     return res.status(HTTP_BAD_REQUEST).render("login", {
       pageTitle,
@@ -71,7 +71,6 @@ export const startGithubLogin = (req, res) => {
   };
   const params = new URLSearchParams(config).toString();
   const finalUrl = `${baseUrl}?${params}`;
-  console.log(finalUrl);
   return res.redirect(finalUrl);
 };
 
@@ -93,7 +92,71 @@ export const startKakaoLogin = (req, res) => {
   const finalUrl = `${baseUrl}?${params}`;
   return res.redirect(finalUrl);
 };
-
+export const startNaverLogin = (req, res) => {
+  const baseUrl = "https://nid.naver.com/oauth2.0/authorize";
+  let envPath;
+  if (res.locals.isKoyeb) {
+    envPath = "https://yoontube-yeongseoyoon.koyeb.app";
+  } else {
+    envPath = "http://localhost:4000";
+  }
+  const config = {
+    response_type: "code",
+    client_id: process.env.NAVER_CLIENT_ID,
+    redirect_uri: envPath + "/users/naver/finish",
+    state: process.env.NAVER_STATE_STRING,
+  };
+  const params = new URLSearchParams(config);
+  const finalUrl = `${baseUrl}?${params}`;
+  return res.redirect(finalUrl);
+};
+export const finishNaverLogin = async (req, res) => {
+  const { code } = req.query;
+  const baseUrl = "https://nid.naver.com/oauth2.0/token";
+  const config = {
+    grant_type: "authorization_code",
+    client_id: process.env.NAVER_CLIENT_ID,
+    client_secret: process.env.NAVER_SECRET,
+    code,
+    state: process.env.NAVER_STATE,
+  };
+  const params = new URLSearchParams(config);
+  const finalUrl = `${baseUrl}?${params}`;
+  const tokenRequest = await (
+    await fetch(finalUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+  ).json();
+  if ("access_token" in tokenRequest) {
+    const { access_token, token_type } = tokenRequest;
+    const baseUrl = "https://openapi.naver.com/v1/nid/me";
+    const responseData = await (
+      await fetch(baseUrl, {
+        headers: {
+          Authorization: `${token_type} ${access_token}`,
+          Accept: "application/json",
+        },
+      })
+    ).json();
+    const userData = responseData.response;
+    let user = await User.findOne({ email: userData.email });
+    if (!user) {
+      user = await User.create({
+        name: userData.name,
+        username: userData.nickname,
+        password: "",
+        email: userData.email,
+        socialOnly: true,
+      });
+    }
+    req.session.loggedIn = true;
+    req.session.loggedInUser = user;
+    res.redirect("/");
+  }
+};
 export const finishGithubLogin = async (req, res) => {
   const baseUrl = "https://github.com/login/oauth/access_token";
   const config = {
@@ -103,7 +166,7 @@ export const finishGithubLogin = async (req, res) => {
   };
   const params = new URLSearchParams(config).toString();
   const finalUrl = `${baseUrl}?${params}`;
-  console.log(finalUrl);
+
   const tokenRequest = await (
     await fetch(finalUrl, {
       method: "POST",
