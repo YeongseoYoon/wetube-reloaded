@@ -7,6 +7,10 @@ form {
     border-radius: 10px;
     border: 1px solid rgba($color: #fff, $alpha: 0.1);
   }
+
+  .form__btn {
+    background-color: rgb(136, 136, 136) !important;
+  }
 }
 
 input:not(input[type="range"]),

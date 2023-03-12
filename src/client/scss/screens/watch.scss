@@ -20,6 +20,11 @@
   .video__data-content {
     display: flex;
   }
+
+  .video__comment-form {
+    vertical-align: middle;
+    resize: none;
+  }
 }
 .video__comments {
   display: flex;
@@ -43,4 +48,15 @@
   .edit-line {
     border-bottom: 1px solid black;
   }
+}
+
+#textarea {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  height: 20px;
+}
+
+#textarea:focus {
+  border: none;
 }

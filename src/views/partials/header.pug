@@ -16,16 +16,16 @@ header
                 li
                     a(href=`/users/${loggedInUser._id}`)#header__profile
                         if !loggedInUser.avatarUrl 
-                            img.header__avatar(src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png",crossorigin)
+                            img.small__avatar(src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png",crossorigin)
                         else if isKoyeb
-                            img.header__avatar(src=loggedInUser.avatarUrl,crossorigin)
+                            img.small__avatar(src=loggedInUser.avatarUrl,crossorigin)
                         else 
                             if loggedInUser.avatarUrl.includes("amazonaws")            
-                                img.header__avatar(src=src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png", crossorigin)
+                                img.small__avatar(src=src="https://yoontube.s3.ap-northeast-2.amazonaws.com/default.png", crossorigin)
                             else if loggedInUser.avatarUrl.includes("githubusercontent")
-                                img.header__avatar(src=loggedInUser.avatarUrl, crossorigin)
+                                img.small__avatar(src=loggedInUser.avatarUrl, crossorigin)
                             else 
-                                img.header__avatar(src="/"+loggedInUser.avatarUrl, crossorigin)
+                                img.small__avatar(src="/"+loggedInUser.avatarUrl, crossorigin)
             else
                 li
                     a(href="/login")  Login

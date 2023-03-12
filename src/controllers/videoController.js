@@ -134,7 +134,7 @@ export const deleteVideo = async (req, res) => {
 export const search = async (req, res) => {
   const { keyword, searchCategory } = req.query;
   let videos = [];
-  console.log(searchCategory);
+
   if (searchCategory === "title") {
     videos = await Video.find({
       title: {
@@ -145,22 +145,7 @@ export const search = async (req, res) => {
     videos = await Video.find({
       hashtags: { $regex: new RegExp(keyword, "i") },
     }).populate("owner");
-  } else if (searchCategory === "uploader") {
-    videos = await Video.find({
-      owner: {
-        $regex: new RegExp(keyword, "i"),
-      },
-    })
-      .populate("owner")
-      .populate({
-        path: "owner",
-        populate: {
-          path: "videos",
-          model: "User",
-        },
-      });
   }
-  console.log(videos);
   return res.render("search", { pageTitle: "Search", videos });
 };
 

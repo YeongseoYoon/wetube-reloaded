@@ -3,10 +3,9 @@ include mixins/video
 
 block content
     form(method="GET").search__form
-        select(name="searchCategory",id="search-select")
+        select(name="searchCategory",id="search-select", class="search")
             option(value="title") Title
-            option(value="uploader") Uploader 
-            option(value="hashtag") HashTag
+            option(value="hashtag") HashTag   
         input(placeholder="Search", required, type="text", name="keyword", maxLength=80)
         button
             i.fas.fa-search

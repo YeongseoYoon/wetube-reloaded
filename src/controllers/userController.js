@@ -153,7 +153,8 @@ export const finishNaverLogin = async (req, res) => {
       });
     }
     req.session.loggedIn = true;
-    req.session.loggedInUser = user;
+    req.session.user = user;
+
     res.redirect("/");
   }
 };
