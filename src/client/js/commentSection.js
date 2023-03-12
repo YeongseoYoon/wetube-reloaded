@@ -9,7 +9,7 @@ let tempComment;
 const addComment = (text, id, owner) => {
   const copyNode = headerProfile.cloneNode(true);
   const newCommentHeader = copyNode.querySelector("img");
-  newCommentHeader.className = "video__comment__avatar";
+  newCommentHeader.className = "small__avatar";
 
   const videoComments = document.querySelector(".video__comments ul");
   const newComment = document.createElement("li");
